@@ -10,8 +10,15 @@
 #define vram 0xAC000000
 
 #define EMPTY_PIXEL -1
-#define WHITE_PIXEL 1
-#define BLACK_PIXEL 0
+
+// Create Colors using this Pattern
+// 0b 00000 000000 00000
+//      R     G      B
+#define C_BLACK 0b0000000000000000
+#define C_WHITE 0b1111111111111111
+#define C_RED   0b1111100000000000
+#define C_GREEN 0b0000011111100000
+#define C_BLUE  0b0000000000011111
 
 
 typedef struct sprite {
@@ -40,35 +47,26 @@ void renderPixel(int x, int y, int color) {
 	*p = color;
 }
 
-void renderSprite(int x, int y, sprite* pSprite, int scaleFactor) {
-    int iY = 0;
-	int tmpY = y;
-	while (iY < pSprite->height) {
-		int yS = 0;
-		while (yS < scaleFactor) {
-            int iX = 0;
-            int tmpX = x;
-            while (iX < pSprite->width) {
-                int xS = 0;
-                int color = pSprite->data[tmpY][tmpX];
-                while (xS < scaleFactor) {
-                    if (color != EMPTY_PIXEL) {
-                        renderPixel(tmpX, tmpY, color);
-                    }
+void renderSprite(int pX, int pY, sprite* pSprite, int scaleFactor) {
+  int tmpY = pY;
+  for (int y = 0; y < pSprite->height; y++) {
+    for (int yS = 0; yS < scaleFactor; yS++) {
+      int tmpX = pX;
+      for (int x = 0; x < pSprite->width; x++) {
+        int color = pSprite->data[y][x];
 
-                    tmpX++;
-                    xS++;
-                }
-                
-                iX++;
-            }
+        for (int xS = 0; xS < scaleFactor; xS++) {
+          if (color != EMPTY_PIXEL) {
+            renderPixel(tmpX, tmpY, color);
+          }
 
-			tmpY++;
-			yS++;
-		}
+          tmpX++;
+        }
+      }
 
-		iY++;
-	}
+      tmpY++;
+    }
+  }
 }
 
 void renderCenteredMiniText(int x1, int x2, int pY, unsigned char* text, color_t fore, color_t back) {
