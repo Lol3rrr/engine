@@ -20,15 +20,8 @@
 #define C_GREEN 0b0000011111100000
 #define C_BLUE  0b0000000000011111
 
-
-typedef struct sprite {
-    int height;
-    int width;
-    int** data;
-} sprite;
-
 void renderPixel(int x, int y, int color);
-void renderSprite(int x, int y, sprite* pSprite, int scaleFactor);
+void renderSprite(int x, int y, int height, int width, int data[height][width], int scaleFactor);
 void renderCenteredMiniText(int x1, int x2, int pY, unsigned char* text, color_t fore, color_t back);
 void renderCenterMiniText(int y, unsigned char* text, color_t fore, color_t back);
 void renderMiniText(int x, int y, unsigned char* text, color_t fore, color_t back);
@@ -47,13 +40,13 @@ void renderPixel(int x, int y, int color) {
 	*p = color;
 }
 
-void renderSprite(int pX, int pY, sprite* pSprite, int scaleFactor) {
+void renderSprite(int pX, int pY, int height, int width, int data[height][width], int scaleFactor) {
   int tmpY = pY;
-  for (int y = 0; y < pSprite->height; y++) {
+  for (int y = 0; y < height; y++) {
     for (int yS = 0; yS < scaleFactor; yS++) {
       int tmpX = pX;
-      for (int x = 0; x < pSprite->width; x++) {
-        int color = pSprite->data[y][x];
+      for (int x = 0; x < width; x++) {
+        int color = data[y][x];
 
         for (int xS = 0; xS < scaleFactor; xS++) {
           if (color != EMPTY_PIXEL) {
