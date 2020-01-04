@@ -21,6 +21,7 @@
 #define C_BLUE  0b0000000000011111
 
 void renderPixel(int x, int y, int color);
+void renderRect(int x, int y, int width, int height, int color);
 void renderSprite(int x, int y, int height, int width, int data[height][width], int scaleFactor);
 void renderCenteredMiniText(int x1, int x2, int pY, unsigned char* text, color_t fore, color_t back);
 void renderCenterMiniText(int y, unsigned char* text, color_t fore, color_t back);
@@ -38,6 +39,14 @@ void renderPixel(int x, int y, int color) {
 	unsigned short* p = (unsigned short*) vram;
 	p += (DISPLAY_WIDTH * y) + x;
 	*p = color;
+}
+
+void renderRect(int pX, int pY, int width, int height, int color) {
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			renderPixel(pX + x, pY + y, color);
+		}
+	}
 }
 
 void renderSprite(int pX, int pY, int height, int width, int data[height][width], int scaleFactor) {
